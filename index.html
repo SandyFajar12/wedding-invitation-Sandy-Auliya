@@ -125,6 +125,23 @@
     .header-guest{font-size:.74rem;}
   }
 
+  /* ---------- Music toggle ---------- */
+  .music-toggle{
+    position:fixed;bottom:24px;right:24px;z-index:30;
+    width:48px;height:48px;border-radius:50%;
+    background:var(--ink);color:var(--paper);
+    border:none;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px rgba(42,38,33,.28);
+    transition:transform .25s ease, background .25s ease;
+  }
+  .music-toggle:hover{background:var(--gold);transform:translateY(-2px);}
+  .music-toggle svg{width:20px;height:20px;}
+  .music-toggle:not(.is-playing) #music-icon-pause{display:none;}
+  .music-toggle.is-playing #music-icon-play{display:none;}
+  @media (max-width:640px){
+    .music-toggle{bottom:16px;right:16px;width:44px;height:44px;}
+  }
+
   /* ---------- Hero ---------- */
   .hero-section{position:relative;padding:min(14vh,120px) 0 60px;overflow:hidden;}
   .hero-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center;padding-top:20px;}
@@ -321,6 +338,12 @@
     </button>
   </div>
 </section>
+
+<audio id="bg-music" src="ANDMESH%20-%20ANUGERAH%20TERINDAH.mp3" loop preload="none"></audio>
+<button class="music-toggle" id="music-toggle" type="button" aria-label="Putar atau jeda musik" style="display:none;">
+  <svg id="music-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+  <svg id="music-icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+</button>
 
 <!-- ============ MAIN INVITATION ============ -->
 <div class="invitation-page" id="invitation-page" style="display:none;">
@@ -649,6 +672,26 @@
     page.style.display = "block";
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
     initReveal();
+
+    var bgMusic = document.getElementById("bg-music");
+    var musicToggle = document.getElementById("music-toggle");
+    musicToggle.style.display = "flex";
+    bgMusic.play().then(function(){
+      musicToggle.classList.add("is-playing");
+    }).catch(function(){
+      musicToggle.classList.remove("is-playing");
+    });
+  });
+
+  document.getElementById("music-toggle").addEventListener("click", function(){
+    var bgMusic = document.getElementById("bg-music");
+    var btn = document.getElementById("music-toggle");
+    if (bgMusic.paused) {
+      bgMusic.play().then(function(){ btn.classList.add("is-playing"); });
+    } else {
+      bgMusic.pause();
+      btn.classList.remove("is-playing");
+    }
   });
 
   /* ---------------- Smooth scroll ---------------- */
